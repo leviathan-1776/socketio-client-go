@@ -1,9 +1,37 @@
-# golang socket.io client-side for nodejs socket.io server-side
+# golang socket.io client
 
-### client-side
+## example
+```go
+package main
 
-    go run client.go
+import (
+	"fmt"
+	"net/http"
+	"time"
 
-### server-side
+	socketio "github.com/leviathan-1776/socketio-client-go"
+)
 
-    node server.js
+func main() {
+	var header http.Header = map[string][]string{}
+	s, err := socketio.Socket("ws://127.0.0.1:3000")
+	if err != nil {
+		panic(err)
+	}
+	s.Connect(header)
+	s.On("message", func(args ...interface{}) {
+		fmt.Println(args[0])
+	})
+	for {
+		s.Emit("message", "hello server!")
+		time.Sleep(2 * time.Second)
+	}
+}
+
+```
+
+## server
+
+* [socket.io](https://socket.io/)
+* [go-socket.io](https://github.com/googollee/go-socket.io)
+
